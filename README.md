@@ -8,3 +8,5 @@ As this is just a demo, the model was trained on 5 products only:
 * nintendo_switch
 * ps4_controller
 * yeezy_boost_350
+
+[Click here to test the demo app!](https://share.streamlit.io/gunji-ng/founik-soft-certification-computer-vision-model/main/founik_model.py)
