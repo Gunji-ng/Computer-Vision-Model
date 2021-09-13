@@ -4,9 +4,9 @@ import numpy as np
 import tensorflow as tf
 from PIL import Image
 
-header = st.beta_container()
-img_display = st.beta_container()
-prediction = st.beta_container()
+header = st.container()
+img_display = st.container()
+prediction = st.container()
 
 @st.cache(allow_output_mutation=True)
 def load_model():
@@ -18,6 +18,8 @@ def normalize(image):
     image = tf.cast(image, tf.float32)
     image /= 255
     return image
+
+INPUT_SIZE = 224
 
 about_text = """
 Sometimes, consumers see (in public) items that they would love to buy but they might not know the name/model of the product. It would be great if they could just upload an image of the item an have the product identified.
@@ -50,11 +52,15 @@ with prediction:
 
     image = np.expand_dims(image, axis=0)
     image = tf.concat(image, axis=0)
-    image = tf.image.resize(image, [256, 256])
+    image = tf.image.resize(image, [INPUT_SIZE, INPUT_SIZE])
 
     image = normalize(image)
 
     labels = ['iphone12_pro_max', 'jbl_charge3', 'nintendo_switch', 'ps4_controller', 'yeezy_boost_350']
     prediction = model.predict(image)
-    predicted_label = labels[prediction.argmax()]
-    st.markdown(f'_Product found in the image:_ **{predicted_label}**')
+
+    if prediction.max() > 0:
+        predicted_label = labels[prediction.argmax()]
+        st.markdown(f'_Product found in the image:_ **{predicted_label}**')
+    else:
+        st.markdown("_Sorry we couldn't find any matching products_")
